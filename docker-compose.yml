@@ -12,7 +12,17 @@ services:
     - "9090:9090"
     depends_on:
       - node_exporter
+      - java_app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
   node_exporter:
     image: quay.io/prometheus/node-exporter
     ports:
     - "9100:9100"
+    command:
+      - '--path.rootfs=/host --cap-add=SYS_TIME'
+    network_mode: host
+  java_app:
+    build: ./java_app
+    ports:
+    - "8080:8080"
